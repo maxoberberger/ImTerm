@@ -5,7 +5,6 @@ add_library(ImTerm INTERFACE)
 add_library(ImTerm::terminal ALIAS ImTerm)
 
 target_include_directories(ImTerm INTERFACE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
     $<INSTALL_INTERFACE:include/>
 )
-
-#add_subdirectory(example EXCLUDE_FROM_ALL)
