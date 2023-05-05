@@ -83,9 +83,9 @@ namespace details {
 
 		std::map<std::string::const_iterator, std::pair<unsigned long, std::optional<theme::constexpr_color>>> colors;
 		if (filter.empty()) {
-			colors.emplace(msg.value.cbegin() + msg.color_end, std::pair{msg.value.size() - msg.color_end, std::optional<theme::constexpr_color>{}});
-			colors.emplace(msg.value.cbegin() + msg.color_beg, std::pair{msg.color_end - msg.color_beg, std::optional<theme::constexpr_color>{}});
-			colors.emplace(msg.value.cbegin(), std::pair{msg.color_beg, std::optional<theme::constexpr_color>{}});
+			colors.emplace(msg.value.cbegin() + msg.color_end, std::pair{static_cast<unsigned long>(msg.value.size() - msg.color_end), std::optional<theme::constexpr_color>{}});
+			colors.emplace(msg.value.cbegin() + msg.color_beg, std::pair{static_cast<unsigned long>(msg.color_end - msg.color_beg), std::optional<theme::constexpr_color>{}});
+			colors.emplace(msg.value.cbegin(), std::pair{static_cast<unsigned long>(msg.color_beg), std::optional<theme::constexpr_color>{}});
 			return colors;
 		}
 
@@ -96,12 +96,12 @@ namespace details {
 
 		auto distance = static_cast<unsigned long>(std::distance(msg.value.cbegin(), it));
 		if (distance > msg.color_beg) {
-			colors.emplace(msg.value.cbegin(), std::pair{msg.color_beg, std::optional<theme::constexpr_color>{}});
+			colors.emplace(msg.value.cbegin(), std::pair{static_cast<unsigned long>(msg.color_beg), std::optional<theme::constexpr_color>{}});
 			if (distance > msg.color_end) {
-				colors.emplace(msg.value.cbegin() + msg.color_beg, std::pair{msg.color_end - msg.color_beg, std::optional<theme::constexpr_color>{}});
-				colors.emplace(msg.value.cbegin() + msg.color_end, std::pair{distance - msg.color_end, std::optional<theme::constexpr_color>{}});
+				colors.emplace(msg.value.cbegin() + msg.color_beg, std::pair{static_cast<unsigned long>(msg.color_end - msg.color_beg), std::optional<theme::constexpr_color>{}});
+				colors.emplace(msg.value.cbegin() + msg.color_end, std::pair{static_cast<unsigned long>(distance - msg.color_end), std::optional<theme::constexpr_color>{}});
 			} else {
-				colors.emplace(msg.value.cbegin() + msg.color_beg, std::pair{distance - msg.color_beg, std::optional<theme::constexpr_color>{}});
+				colors.emplace(msg.value.cbegin() + msg.color_beg, std::pair{static_cast<unsigned long>(distance - msg.color_beg), std::optional<theme::constexpr_color>{}});
 			}
 		} else {
 			colors.emplace(msg.value.cbegin(), std::pair{distance, std::optional<theme::constexpr_color>{}});
@@ -111,7 +111,7 @@ namespace details {
 
 		std::string::const_iterator last_valid;
 		do {
-			colors[it] = std::pair{filter.size(), matching_text_color};
+			colors[it] = std::pair{static_cast<unsigned long>(filter.size()), matching_text_color};
 			last_valid = it + filter.size();
 			it = std::search(last_valid, msg.value.cend(), filter.begin(), filter.end());
 
@@ -125,8 +125,8 @@ namespace details {
 					colors[last_valid + mid_point] = std::pair{distance - mid_point, std::optional<theme::constexpr_color>{}};
 				} else {
 					auto len = msg.color_end - msg.color_beg;
-					colors[last_valid + mid_point] = std::pair{len, std::optional<theme::constexpr_color>{}};
-					colors[last_valid + mid_point + len] = std::pair{distance - mid_point - len, std::optional<theme::constexpr_color>{}};
+					colors[last_valid + mid_point] = std::pair{static_cast<unsigned long>(len), std::optional<theme::constexpr_color>{}};
+					colors[last_valid + mid_point + len] = std::pair{static_cast<unsigned long>(distance - mid_point - len), std::optional<theme::constexpr_color>{}};
 				}
 
 			} else if (last_valid < msg.value.cbegin() + msg.color_end && last_valid + distance > msg.value.cbegin() + msg.color_end){
